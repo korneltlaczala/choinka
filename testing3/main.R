@@ -10,7 +10,7 @@ generate_tree_plot <- function(ppr = 100, revolutions = 1, branch_count = 10) {
     branch_offset <- arclen / branch_count
     branch_offset <- seq(from = 0, by = branch_offset, length.out = branch_count)
 
-    z <- rep(seq(0, height, length.out = point_count), 2*branch_count)
+    z <- rep(seq(0, height, length.out = point_count), branch_count)
 
     spread <- (1:point_count) / ppr * arclen
     grid <- expand.grid(spread, branch_offset)
@@ -19,7 +19,8 @@ generate_tree_plot <- function(ppr = 100, revolutions = 1, branch_count = 10) {
     x <- sin(spread) * rev(z) * width
     y <- cos(spread) * rev(z) * width
 
-    df <- data.frame(x, y, z)
+    colors <- rep(c("green", "darkgreen", "forestgreen"), length.out = point_count * branch_count)
+    df <- data.frame(x, y, z, colors)
 
     plot <- plot_ly(df,
                     x = ~x,
@@ -27,7 +28,7 @@ generate_tree_plot <- function(ppr = 100, revolutions = 1, branch_count = 10) {
                     z = ~z,
                     type = "scatter3d",
                     mode = "markers",
-                    marker = list(size = 2))
+                    marker = list(size = 6, color = ~colors))
     print(plot)
 }
 

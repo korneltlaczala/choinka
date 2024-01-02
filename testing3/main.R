@@ -1,17 +1,27 @@
 library(plotly)
 library(ggplot2)
 
-ppr <- 200 # ppr - points per revolution
-revolutions <- 2
+# point related constants
+ppr <- 100 # ppr - points per revolution
+revolutions <- 1
 arclen <- 2 * pi
 point_count <- ceiling(ppr * revolutions)
+
+# tree properties
 height <- 10
 width <- 0.3
+branch_count <- 10
+branch_offset <- arclen / branch_count
+branch_offset <- seq(from = 0, by = branch_offset, length.out = branch_count)
 
-z <- seq(0, height, length.out = point_count)
+z <- rep(seq(0, height, length.out = point_count), 2*branch_count)
 
-x <- sin((1:point_count) / ppr * arclen) * rev(z) * wide_constant
-y <- cos((1:point_count) / ppr * arclen) * rev(z) * wide_constant
+spread <- (1:point_count) / ppr * arclen
+grid <- expand.grid(spread, branch_offset)
+spread <- grid$Var1 + grid$Var2
+
+x <- sin(spread) * rev(z) * wide_constant
+y <- cos(spread) * rev(z) * wide_constant
 
 df <- data.frame(x, y, z)
 
